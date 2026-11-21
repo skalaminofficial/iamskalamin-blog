@@ -49,3 +49,11 @@
   "notfound.text": "The page you are looking for does not exist or has been moved.",
   "notfound.home": "Go to homepage"
 }
+  "tag.tech": "Technology",
+  "tag.travel": "Travel",
+  "tag.life": "Life",
+  "tag.tutorial": "Tutorial",
+  "home.topics": "Explore topics",
+  "tags.count": "{n} posts",
+  "post.copyLink": "Copy link",
+  "post.copied": "Link copied"
