@@ -1,0 +1,14 @@
+---
+import { localePath, useTranslations } from '../../i18n';
+import { tagLabel } from '../../utils/posts';
+import type { Lang } from '../../i18n/languages';
+
+interface Props {
+  tag: string;
+  lang: Lang;
+}
+const { tag, lang } = Astro.props;
+const t = useTranslations(lang);
+---
+
+<a class="badge" href={localePath(lang, `tags/${tag}`)}>{tagLabel(t, tag)}</a>
