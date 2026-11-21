@@ -1,0 +1,176 @@
+---
+import Icon from '../ui/Icon.astro';
+import { SITE } from '../../config';
+import { localePath, useTranslations } from '../../i18n';
+import type { Lang } from '../../i18n/languages';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const year = new Date().getFullYear();
+
+const socialMeta: Record<string, { label: string; icon: string }> = {
+  github: { label: 'GitHub', icon: 'github' },
+  facebook: { label: 'Facebook', icon: 'facebook' },
+  x: { label: 'X', icon: 'x' },
+  linkedin: { label: 'LinkedIn', icon: 'linkedin' },
+  youtube: { label: 'YouTube', icon: 'youtube' },
+  instagram: { label: 'Instagram', icon: 'instagram' },
+};
+
+// শুধু যেগুলোতে লিংক দেওয়া আছে সেগুলো দেখাবে
+const socials = Object.entries(SITE.socials)
+  .filter(([, url]) => Boolean(url))
+  .map(([key, url]) => ({ ...socialMeta[key], url: url as string }));
+if (SITE.email) {
+  socials.push({ label: 'Email', icon: 'mail', url: `mailto:${SITE.email}` });
+}
+
+const explore = [
+  { key: 'nav.home', href: localePath(lang) },
+  { key: 'nav.blog', href: localePath(lang, 'blog') },
+  { key: 'nav.tags', href: localePath(lang, 'tags') },
+  { key: 'nav.about', href: localePath(lang, 'about') },
+];
+const legal = [
+  { key: 'footer.privacy', href: localePath(lang, 'privacy') },
+  { key: 'footer.cookies', href: localePath(lang, 'cookies') },
+  { key: 'footer.terms', href: localePath(lang, 'terms') },
+];
+---
+
+<footer class="site-footer no-print">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <p class="footer-name gradient-text">{SITE.name[lang]}</p>
+        <p class="footer-tagline">{t('site.tagline')}</p>
+        {socials.length > 0 && (
+          <div class="socials" aria-label={t('footer.follow')}>
+            {socials.map((s) => (
+              <a
+                class="social"
+                href={s.url}
+                target="_blank"
+                rel="noopener noreferrer me"
+                aria-label={s.label}
+                title={s.label}
+              >
+                <Icon name={s.icon} size={18} />
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <nav aria-label="Footer">
+        <ul class="footer-list">
+          {explore.map((l) => (
+            <li><a href={l.href}>{t(l.key)}</a></li>
+          ))}
+        </ul>
+      </nav>
+
+      <nav aria-label="Legal">
+        <ul class="footer-list">
+          {legal.map((l) => (
+            <li><a href={l.href}>{t(l.key)}</a></li>
+          ))}
+          <li>
+            <a href={`/${lang}/rss.xml`}>{t('a11y.rss')}</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© {year} {SITE.name[lang]}. {t('footer.rights')}</p>
+      <p>{t('footer.builtWith')}</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--space-12);
+    padding-block: var(--space-10) var(--space-6);
+    border-top: 1px solid var(--border);
+    background: var(--bg-elevated);
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: var(--space-8);
+  }
+  .footer-name {
+    font-size: var(--text-lg);
+    font-weight: 800;
+    margin: 0 0 var(--space-2);
+    display: inline-block;
+  }
+  .footer-tagline {
+    color: var(--text-muted);
+    margin: 0 0 var(--space-4);
+    font-size: var(--text-sm);
+  }
+  .socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+  .social {
+    display: inline-grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    transition: transform var(--dur) var(--ease), color var(--dur) var(--ease),
+      border-color var(--dur) var(--ease);
+  }
+  .social:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    transform: translateY(-3px);
+  }
+  .footer-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.6rem;
+    font-size: var(--text-sm);
+  }
+  .footer-list a {
+    color: var(--text-muted);
+  }
+  .footer-list a:hover {
+    color: var(--accent);
+  }
+  .footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-top: var(--space-8);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: var(--text-xs);
+  }
+  .footer-bottom p {
+    margin: 0;
+  }
+  @media (max-width: 720px) {
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .footer-brand {
+      grid-column: 1 / -1;
+    }
+  }
+</style>
