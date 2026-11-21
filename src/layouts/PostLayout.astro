@@ -1,0 +1,212 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Icon from '../components/ui/Icon.astro';
+import Tag from '../components/blog/Tag.astro';
+import PostCard from '../components/blog/PostCard.astro';
+import TableOfContents from '../components/blog/TableOfContents.astro';
+import { formatDate, formatNumber } from '../utils/formatDate';
+import { readingTime } from '../utils/readingTime';
+import { localePath, useTranslations } from '../i18n';
+import type { Post } from '../utils/posts';
+import type { Lang } from '../i18n/languages';
+
+interface Props {
+  post: Post;
+  lang: Lang;
+  headings: { depth: number; slug: string; text: string }[];
+  related: Post[];
+  alternates: Partial<Record<Lang, string>>;
+}
+const { post, lang, headings, related, alternates } = Astro.props;
+const t = useTranslations(lang);
+const { title, description, pubDate, updatedDate, tags, cover, coverAlt } = post.data;
+const minutes = formatNumber(readingTime(post.body), lang);
+
+const shareUrl = new URL(Astro.url.pathname, Astro.site).href;
+const enc = encodeURIComponent;
+const shares = [
+  { label: 'X', icon: 'x', href: `https://twitter.com/intent/tweet?url=${enc(shareUrl)}&text=${enc(title)}` },
+  { label: 'Facebook', icon: 'facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${enc(shareUrl)}` },
+  { label: 'LinkedIn', icon: 'linkedin', href: `https://www.linkedin.com/sharing/share-offsite/?url=${enc(shareUrl)}` },
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  image={cover}
+  type="article"
+  publishedDate={pubDate}
+  modifiedDate={updatedDate}
+  tags={tags}
+  alternates={alternates}
+>
+  <div class="container post-wrap">
+    <article class="post" data-pagefind-body>
+      <header class="post-header">
+        <a class="back" href={localePath(lang, 'blog')}>← {t('post.backToBlog')}</a>
+        {tags.length > 0 && (
+          <div class="tags">
+            {tags.map((tag) => <Tag tag={tag} lang={lang} />)}
+          </div>
+        )}
+        <h1 data-pagefind-meta="title">{title}</h1>
+        <p class="lead">{description}</p>
+        <p class="meta">
+          <time datetime={pubDate.toISOString()}>{t('blog.publishedOn', { date: formatDate(pubDate, lang) })}</time>
+          {updatedDate && (
+            <>
+              <span aria-hidden="true">·</span>
+              <time datetime={updatedDate.toISOString()}>{t('blog.updatedOn', { date: formatDate(updatedDate, lang) })}</time>
+            </>
+          )}
+          <span aria-hidden="true">·</span>
+          <span>{t('blog.minRead', { n: minutes })}</span>
+        </p>
+      </header>
+
+      {cover && <img class="cover" src={cover} alt={coverAlt ?? ''} decoding="async" data-pagefind-meta="image[src]" />}
+
+      <div class="prose">
+        <slot />
+      </div>
+
+      <footer class="post-footer no-print">
+        <p class="share-title">{t('post.share')}</p>
+        <div class="share">
+          {shares.map((s) => (
+            <a class="btn btn--ghost" href={s.href} target="_blank" rel="noopener noreferrer">
+              <Icon name={s.icon} size={16} /> {s.label}
+            </a>
+          ))}
+          <button
+            type="button"
+            class="btn btn--ghost"
+            data-copy={shareUrl}
+            data-label={t('post.copyLink')}
+            data-done={t('post.copied')}
+          >
+            {t('post.copyLink')}
+          </button>
+        </div>
+      </footer>
+    </article>
+
+    <aside class="side no-print">
+      <TableOfContents headings={headings} lang={lang} />
+    </aside>
+  </div>
+
+  {related.length > 0 && (
+    <section class="section related no-print">
+      <div class="container">
+        <h2>{t('post.related')}</h2>
+        <div class="related-grid">
+          {related.map((p) => <PostCard post={p} lang={lang} />)}
+        </div>
+      </div>
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  .post-wrap {
+    display: grid;
+    grid-template-columns: minmax(0, var(--container-narrow)) 15rem;
+    justify-content: center;
+    gap: var(--space-10);
+    padding-block: var(--space-8) 0;
+  }
+  .side {
+    position: sticky;
+    top: calc(var(--header-height) + 1.5rem);
+    align-self: start;
+  }
+  .back {
+    display: inline-block;
+    margin-bottom: var(--space-4);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: var(--space-3);
+  }
+  h1 {
+    font-size: var(--text-hero);
+    line-height: 1.15;
+  }
+  .lead {
+    font-size: var(--text-lg);
+    color: var(--text-muted);
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+  .post-header {
+    margin-bottom: var(--space-6);
+  }
+  .cover {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+    margin-bottom: var(--space-8);
+  }
+  .post-footer {
+    margin-top: var(--space-10);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--border);
+  }
+  .share-title {
+    margin-bottom: var(--space-3);
+    font-weight: 600;
+  }
+  .share {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .related {
+    margin-top: var(--space-10);
+    background: var(--bg-elevated);
+    border-top: 1px solid var(--border);
+  }
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+    gap: var(--space-5);
+  }
+  @media (max-width: 1000px) {
+    .post-wrap {
+      grid-template-columns: minmax(0, 1fr);
+      max-width: var(--container-narrow);
+    }
+    .side {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(btn.dataset.copy as string);
+        btn.textContent = btn.dataset.done as string;
+        setTimeout(() => {
+          btn.textContent = btn.dataset.label as string;
+        }, 2000);
+      } catch {
+        /* ক্লিপবোর্ড বন্ধ থাকলে কিছু করার নেই */
+      }
+    });
+  });
+</script>
