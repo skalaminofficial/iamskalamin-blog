@@ -1,0 +1,148 @@
+---
+import Icon from '../ui/Icon.astro';
+import { useTranslations } from '../../i18n';
+import type { Lang } from '../../i18n/languages';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const themes = [
+  { value: 'light', icon: 'sun', label: t('theme.light') },
+  { value: 'dark', icon: 'moon', label: t('theme.dark') },
+  { value: 'system', icon: 'monitor', label: t('theme.system') },
+];
+const accents = [
+  { value: 'blue', color: '#2563eb', label: 'Blue' },
+  { value: 'indigo', color: '#6d5ef0', label: 'Indigo' },
+  { value: 'teal', color: '#0d9488', label: 'Teal' },
+  { value: 'rose', color: '#e11d48', label: 'Rose' },
+];
+---
+
+<div class="menu" data-menu>
+  <button
+    type="button"
+    class="icon-btn"
+    data-menu-button
+    aria-expanded="false"
+    aria-haspopup="true"
+    aria-label={t('theme.label')}
+    title={t('theme.label')}
+  >
+    <span class="icon-sun"><Icon name="sun" /></span>
+    <span class="icon-moon"><Icon name="moon" /></span>
+  </button>
+
+  <div class="menu-panel" data-menu-panel hidden>
+    <p class="menu-title">{t('theme.label')}</p>
+    {themes.map((item) => (
+      <button type="button" class="menu-item" data-theme-value={item.value} aria-pressed="false">
+        <Icon name={item.icon} size={18} />
+        {item.label}
+      </button>
+    ))}
+    <p class="menu-title">{t('theme.accent')}</p>
+    <div class="swatches">
+      {accents.map((a) => (
+        <button
+          type="button"
+          class="swatch"
+          style={`--swatch:${a.color}`}
+          data-accent-value={a.value}
+          aria-label={a.label}
+          title={a.label}
+          aria-pressed="false"
+        />
+      ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  .icon-sun,
+  .icon-moon {
+    display: inline-flex;
+  }
+  .icon-moon {
+    display: none;
+  }
+  :global(:root[data-theme='dark']) .icon-sun {
+    display: none;
+  }
+  :global(:root[data-theme='dark']) .icon-moon {
+    display: inline-flex;
+  }
+  @media (prefers-color-scheme: dark) {
+    :global(:root:not([data-theme='light'])) .icon-sun {
+      display: none;
+    }
+    :global(:root:not([data-theme='light'])) .icon-moon {
+      display: inline-flex;
+    }
+  }
+</style>
+
+<script>
+  const root = document.documentElement;
+  const themeButtons = document.querySelectorAll<HTMLButtonElement>('[data-theme-value]');
+  const accentButtons = document.querySelectorAll<HTMLButtonElement>('[data-accent-value]');
+
+  function read(key: string): string | null {
+    try {
+      return localStorage.getItem(key);
+    } catch {
+      return null;
+    }
+  }
+  function write(key: string, value: string | null) {
+    try {
+      if (value === null) localStorage.removeItem(key);
+      else localStorage.setItem(key, value);
+    } catch {
+      /* স্টোরেজ বন্ধ থাকলে কিছু করার নেই */
+    }
+  }
+  function sync() {
+    const theme = read('theme') ?? 'system';
+    const accent = read('accent') ?? 'blue';
+    themeButtons.forEach((b) =>
+      b.setAttribute('aria-pressed', String(b.dataset.themeValue === theme)),
+    );
+    accentButtons.forEach((b) =>
+      b.setAttribute('aria-pressed', String(b.dataset.accentValue === accent)),
+    );
+  }
+
+  themeButtons.forEach((b) =>
+    b.addEventListener('click', () => {
+      const value = b.dataset.themeValue as string;
+      if (value === 'system') {
+        root.removeAttribute('data-theme');
+        write('theme', null);
+      } else {
+        root.setAttribute('data-theme', value);
+        write('theme', value);
+      }
+      sync();
+    }),
+  );
+
+  accentButtons.forEach((b) =>
+    b.addEventListener('click', () => {
+      const value = b.dataset.accentValue as string;
+      if (value === 'blue') {
+        root.removeAttribute('data-accent');
+        write('accent', null);
+      } else {
+        root.setAttribute('data-accent', value);
+        write('accent', value);
+      }
+      sync();
+    }),
+  );
+
+  sync();
+</script>
