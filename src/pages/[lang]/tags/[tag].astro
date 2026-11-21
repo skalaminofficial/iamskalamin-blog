@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHeader from '../../../components/ui/PageHeader.astro';
+import PostList from '../../../components/blog/PostList.astro';
+import { langCodes, type Lang } from '../../../i18n/languages';
+import { useTranslations } from '../../../i18n';
+import { getPosts, getTags, tagLabel } from '../../../utils/posts';
+
+export async function getStaticPaths() {
+  const paths: { params: { lang: string; tag: string } }[] = [];
+  for (const lang of langCodes) {
+    for (const { tag } of await getTags(lang)) paths.push({ params: { lang, tag } });
+  }
+  return paths;
+}
+
+const lang = Astro.params.lang as Lang;
+const tag = Astro.params.tag as string;
+const t = useTranslations(lang);
+const label = tagLabel(t, tag);
+const posts = (await getPosts(lang)).filter((p) => p.data.tags.includes(tag));
+const title = t('tags.postsTagged', { tag: label });
+---
+
+<BaseLayout title={title} description={t('blog.description')}>
+  <PageHeader title={title} />
+  <section class="section">
+    <div class="container">
+      <PostList posts={posts} lang={lang} />
+    </div>
+  </section>
+</BaseLayout>
