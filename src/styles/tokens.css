@@ -1,0 +1,138 @@
+/* ===== সাধারণ টোকেন (থিম-নিরপেক্ষ) ===== */
+:root {
+  --font-sans: "Inter", "Geist", system-ui, -apple-system, "Segoe UI", Roboto,
+    "Noto Sans Bengali", "Hind Siliguri", "Kohinoor Bangla", "Nirmala UI",
+    "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "JetBrains Mono", "Cascadia Code", "SF Mono",
+    Menlo, Consolas, monospace;
+
+  --text-xs: 0.8125rem;
+  --text-sm: 0.9375rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.25rem;
+  --text-xl: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+  --text-2xl: clamp(2rem, 1.4rem + 2.4vw, 3rem);
+  --text-hero: clamp(2.5rem, 1.5rem + 4.5vw, 4.5rem);
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-8: 3rem;
+  --space-10: 4.5rem;
+  --space-12: 6rem;
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-full: 999px;
+
+  --container: 72rem;
+  --container-narrow: 46rem;
+  --header-height: 4.25rem;
+
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur: 220ms;
+}
+
+/* ===== অ্যাকসেন্ট প্যালেট (ডিফল্ট: নীল) ===== */
+:root {
+  --accent-h: 221;
+  --accent-light: #2563eb;
+  --accent-light-hover: #1d4ed8;
+  --accent-dark: #5b9bff;
+  --accent-dark-hover: #8ab8ff;
+  --accent2-light: #0891b2;
+  --accent2-dark: #22d3ee;
+}
+:root[data-accent="indigo"] {
+  --accent-light: #4f46e5; --accent-light-hover: #4338ca;
+  --accent-dark: #818cf8;  --accent-dark-hover: #a5b4fc;
+  --accent2-light: #7c3aed; --accent2-dark: #c084fc;
+}
+:root[data-accent="teal"] {
+  --accent-light: #0d9488; --accent-light-hover: #0f766e;
+  --accent-dark: #2dd4bf;  --accent-dark-hover: #5eead4;
+  --accent2-light: #2563eb; --accent2-dark: #60a5fa;
+}
+:root[data-accent="rose"] {
+  --accent-light: #e11d48; --accent-light-hover: #be123c;
+  --accent-dark: #fb7185;  --accent-dark-hover: #fda4af;
+  --accent2-light: #7c3aed; --accent2-dark: #c084fc;
+}
+
+/* ===== লাইট থিম (ডিফল্ট) ===== */
+:root {
+  color-scheme: light;
+  --bg: #f6f8fc;
+  --bg-elevated: #ffffff;
+  --surface: #ffffff;
+  --surface-muted: #eef2f9;
+  --text: #0b1324;
+  --text-muted: #556178;
+  --border: #dfe5f0;
+  --accent: var(--accent-light);
+  --accent-hover: var(--accent-light-hover);
+  --accent-2: var(--accent2-light);
+  --on-accent: #ffffff;
+  --accent-soft: color-mix(in srgb, var(--accent) 10%, transparent);
+  --glass: rgba(255, 255, 255, 0.72);
+  --shadow-sm: 0 1px 2px rgba(15, 30, 70, 0.06);
+  --shadow-md: 0 8px 24px rgba(15, 30, 70, 0.08);
+  --shadow-lg: 0 24px 56px rgba(15, 30, 70, 0.14);
+  --code-bg: #f0f4fb;
+  --glow: radial-gradient(60% 60% at 50% 0%,
+    color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%);
+}
+
+/* ===== ডার্ক থিম: ডিভাইস সেটিং অনুযায়ী (ইউজার কিছু বাছেনি) ===== */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #070b14;
+    --bg-elevated: #0d1424;
+    --surface: #0f1729;
+    --surface-muted: #141d33;
+    --text: #e8eefc;
+    --text-muted: #94a1ba;
+    --border: #1f2b46;
+    --accent: var(--accent-dark);
+    --accent-hover: var(--accent-dark-hover);
+    --accent-2: var(--accent2-dark);
+    --on-accent: #06101f;
+    --accent-soft: color-mix(in srgb, var(--accent) 14%, transparent);
+    --glass: rgba(13, 20, 36, 0.72);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
+    --shadow-lg: 0 24px 56px rgba(0, 0, 0, 0.55);
+    --code-bg: #0b1222;
+    --glow: radial-gradient(60% 60% at 50% 0%,
+      color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%);
+  }
+}
+
+/* ===== ডার্ক থিম: ইউজার নিজে বেছে নিলে ===== */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #070b14;
+  --bg-elevated: #0d1424;
+  --surface: #0f1729;
+  --surface-muted: #141d33;
+  --text: #e8eefc;
+  --text-muted: #94a1ba;
+  --border: #1f2b46;
+  --accent: var(--accent-dark);
+  --accent-hover: var(--accent-dark-hover);
+  --accent-2: var(--accent2-dark);
+  --on-accent: #06101f;
+  --accent-soft: color-mix(in srgb, var(--accent) 14%, transparent);
+  --glass: rgba(13, 20, 36, 0.72);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 24px 56px rgba(0, 0, 0, 0.55);
+  --code-bg: #0b1222;
+  --glow: radial-gradient(60% 60% at 50% 0%,
+    color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%);
+}
