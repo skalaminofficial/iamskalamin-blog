@@ -3,7 +3,7 @@ backend:
   repo: skalaminofficial/iamskalamin-blog
   branch: main
   base_url: https://theskalaminblog.pages.dev
-    auth_endpoint: api/auth/start
+      auth_endpoint: api/login
     
 site_url: https://theskalaminblog.pages.dev
 display_url: https://theskalaminblog.pages.dev
