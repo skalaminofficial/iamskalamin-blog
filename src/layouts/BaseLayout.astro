@@ -1,0 +1,69 @@
+---
+import '../styles/global.css';
+import SEO from '../components/seo/SEO.astro';
+import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import { getLangFromUrl, useTranslations } from '../i18n';
+import { languages, type Lang } from '../i18n/languages';
+import { SITE } from '../config';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  publishedDate?: Date;
+  modifiedDate?: Date;
+  tags?: string[];
+  noindex?: boolean;
+  alternates?: Partial<Record<Lang, string>>;
+}
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const {
+  title = SITE.name[lang],
+  description = SITE.description[lang],
+  image,
+  type = 'website',
+  publishedDate,
+  modifiedDate,
+  tags,
+  noindex = false,
+  alternates,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang={languages[lang].htmlLang} dir={languages[lang].dir}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f6f8fc" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#070b14" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" type="application/rss+xml" title={SITE.name[lang]} href={`/${lang}/rss.xml`} />
+    <script is:inline src="/theme-init.js"></script>
+    <SEO
+      title={title}
+      description={description}
+      lang={lang}
+      image={image}
+      type={type}
+      publishedDate={publishedDate}
+      modifiedDate={modifiedDate}
+      tags={tags}
+      noindex={noindex}
+      alternates={alternates}
+    />
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{t('a11y.skip')}</a>
+    <Header lang={lang} alternates={alternates} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+  </body>
+</html>
