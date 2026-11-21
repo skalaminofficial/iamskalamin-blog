@@ -1,0 +1,57 @@
+---
+import Icon from '../ui/Icon.astro';
+import { languages, type Lang } from '../../i18n/languages';
+import { localePath, switchLangPath, useTranslations } from '../../i18n';
+
+interface Props {
+  lang: Lang;
+  alternates?: Partial<Record<Lang, string>>;
+}
+const { lang, alternates } = Astro.props;
+const t = useTranslations(lang);
+
+const items = (Object.keys(languages) as Lang[]).map((code) => ({
+  code,
+  name: languages[code].nativeName,
+  // পোস্টের অনুবাদ না থাকলে ওই ভাষার হোমে নিয়ে যায়
+  href: alternates ? (alternates[code] ?? localePath(code)) : switchLangPath(Astro.url, code),
+  current: code === lang,
+}));
+---
+
+<div class="menu" data-menu>
+  <button
+    type="button"
+    class="icon-btn"
+    data-menu-button
+    aria-expanded="false"
+    aria-haspopup="true"
+    aria-label={t('lang.label')}
+    title={t('lang.label')}
+  >
+    <Icon name="globe" />
+    <span class="lang-code">{lang.toUpperCase()}</span>
+  </button>
+
+  <div class="menu-panel" data-menu-panel hidden>
+    <p class="menu-title">{t('lang.label')}</p>
+    {items.map((item) => (
+      <a
+        class="menu-item"
+        href={item.href}
+        hreflang={item.code}
+        lang={item.code}
+        aria-current={item.current ? 'true' : undefined}
+      >
+        {item.name}
+      </a>
+    ))}
+  </div>
+</div>
+
+<style>
+  .lang-code {
+    font-weight: 600;
+    font-size: var(--text-xs);
+  }
+</style>
