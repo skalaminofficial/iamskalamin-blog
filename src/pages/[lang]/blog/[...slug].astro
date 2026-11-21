@@ -1,0 +1,42 @@
+---
+import { render } from 'astro:content';
+import PostLayout from '../../../layouts/PostLayout.astro';
+import { langCodes, type Lang } from '../../../i18n/languages';
+import { getAllPosts, postLang, postSlug, postPath } from '../../../utils/posts';
+
+export async function getStaticPaths() {
+  const posts = await getAllPosts();
+  return posts.map((post) => ({
+    params: { lang: postLang(post), slug: postSlug(post) },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const lang = Astro.params.lang as Lang;
+const { Content, headings } = await render(post);
+
+const all = await getAllPosts();
+const slug = postSlug(post);
+
+// একই স্লাগের অন্য ভাষার সংস্করণ (অনুবাদ)
+const alternates: Partial<Record<Lang, string>> = {};
+for (const code of langCodes) {
+  const match = all.find((p) => postLang(p) === code && postSlug(p) === slug);
+  if (match) alternates[code] = postPath(match);
+}
+
+// সম্পর্কিত লেখা: একই ট্যাগের, সর্বোচ্চ ৩টি
+const related = all
+  .filter(
+    (p) =>
+      postLang(p) === lang &&
+      p.id !== post.id &&
+      p.data.tags.some((tag) => post.data.tags.includes(tag)),
+  )
+  .slice(0, 3);
+---
+
+<PostLayout post={post} lang={lang} headings={headings} related={related} alternates={alternates}>
+  <Content />
+</PostLayout>
