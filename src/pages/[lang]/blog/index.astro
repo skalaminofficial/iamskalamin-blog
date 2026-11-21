@@ -1,0 +1,15 @@
+---
+import BlogListing from '../../../components/blog/BlogListing.astro';
+import { langCodes, type Lang } from '../../../i18n/languages';
+import { getPosts, PAGE_SIZE } from '../../../utils/posts';
+
+export function getStaticPaths() {
+  return langCodes.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Lang;
+const all = await getPosts(lang);
+const total = Math.max(1, Math.ceil(all.length / PAGE_SIZE));
+---
+
+<BlogListing lang={lang} posts={all.slice(0, PAGE_SIZE)} current={1} total={total} />
