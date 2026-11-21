@@ -1,0 +1,95 @@
+backend:
+  name: github
+  repo: skalaminofficial/iamskalamin-blog
+  branch: main
+  base_url: https://theskalaminblog.pages.dev
+  auth_endpoint: api/auth
+
+site_url: https://theskalaminblog.pages.dev
+display_url: https://theskalaminblog.pages.dev
+logo_url: /favicon.svg
+locale: en
+
+media_folder: public/images
+public_folder: /images
+
+collections:
+  - name: blog_en
+    label: "Blog (English)"
+    label_singular: "Post"
+    folder: src/content/blog/en
+    create: true
+    extension: md
+    format: frontmatter
+    slug: "{{fields.urlName}}"
+    summary: "{{title}}"
+    sortable_fields: ["pubDate", "title"]
+    editor:
+      preview: false
+    fields:
+      - { label: "Title", name: title, widget: string, pattern: ['^.{1,120}$', "Maximum 120 characters"] }
+      - { label: "URL name", name: urlName, widget: string, pattern: ['^[a-z0-9-]+$', "Only lowercase English letters, numbers and hyphens"], hint: "Used in the web address. Use the SAME URL name for the English and Bengali version of one article." }
+      - { label: "Description", name: description, widget: text, pattern: ['^[\s\S]{1,220}$', "Maximum 220 characters"] }
+      - { label: "Publish date", name: pubDate, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false, picker_utc: true }
+      - { label: "Updated date", name: updatedDate, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false, picker_utc: true, required: false }
+      - { label: "Topics", name: tags, widget: select, multiple: true, required: false, default: [], options: ["tech", "travel", "life", "tutorial"] }
+      - { label: "Cover image", name: cover, widget: image, required: false }
+      - { label: "Cover image description", name: coverAlt, widget: string, required: false }
+      - { label: "Draft (hidden from the live site)", name: draft, widget: boolean, default: false }
+      - { label: "Body", name: body, widget: markdown }
+
+  - name: blog_bn
+    label: "Blog (বাংলা)"
+    label_singular: "Post"
+    folder: src/content/blog/bn
+    create: true
+    extension: md
+    format: frontmatter
+    slug: "{{fields.urlName}}"
+    summary: "{{title}}"
+    sortable_fields: ["pubDate", "title"]
+    editor:
+      preview: false
+    fields:
+      - { label: "Title", name: title, widget: string, pattern: ['^.{1,120}$', "Maximum 120 characters"] }
+      - { label: "URL name", name: urlName, widget: string, pattern: ['^[a-z0-9-]+$', "Only lowercase English letters, numbers and hyphens"], hint: "Used in the web address. Use the SAME URL name for the English and Bengali version of one article." }
+      - { label: "Description", name: description, widget: text, pattern: ['^[\s\S]{1,220}$', "Maximum 220 characters"] }
+      - { label: "Publish date", name: pubDate, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false, picker_utc: true }
+      - { label: "Updated date", name: updatedDate, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false, picker_utc: true, required: false }
+      - { label: "Topics", name: tags, widget: select, multiple: true, required: false, default: [], options: ["tech", "travel", "life", "tutorial"] }
+      - { label: "Cover image", name: cover, widget: image, required: false }
+      - { label: "Cover image description", name: coverAlt, widget: string, required: false }
+      - { label: "Draft (hidden from the live site)", name: draft, widget: boolean, default: false }
+      - { label: "Body", name: body, widget: markdown }
+
+  - name: pages_en
+    label: "Pages (English)"
+    label_singular: "Page"
+    folder: src/content/pages/en
+    create: false
+    delete: false
+    extension: md
+    format: frontmatter
+    editor:
+      preview: false
+    fields:
+      - { label: "Title", name: title, widget: string }
+      - { label: "Description", name: description, widget: text }
+      - { label: "Updated date", name: updatedDate, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false, picker_utc: true, required: false }
+      - { label: "Body", name: body, widget: markdown }
+
+  - name: pages_bn
+    label: "Pages (বাংলা)"
+    label_singular: "Page"
+    folder: src/content/pages/bn
+    create: false
+    delete: false
+    extension: md
+    format: frontmatter
+    editor:
+      preview: false
+    fields:
+      - { label: "Title", name: title, widget: string }
+      - { label: "Description", name: description, widget: text }
+      - { label: "Updated date", name: updatedDate, widget: datetime, format: "YYYY-MM-DD", date_format: "YYYY-MM-DD", time_format: false, picker_utc: true, required: false }
+      - { label: "Body", name: body, widget: markdown }
