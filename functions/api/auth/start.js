@@ -1,4 +1,4 @@
-import { BASE_HEADERS, randomToken } from '../_lib/security.js';
+import { BASE_HEADERS, randomToken } from '../../_lib/security.js';
 
 export async function onRequestGet({ request, env }) {
   if (!env.GITHUB_CLIENT_ID) {
