@@ -3,7 +3,7 @@ import mdx from '@astrojs/mdx';
 
 export default defineConfig({
   // ডিপ্লয়ের পর আসল ঠিকানা বসাবেন
-  site: 'https://iamskalaminblog.pages.dev',
+  site: 'https://ariyan-blog.pages.dev',
   trailingSlash: 'always',
   integrations: [mdx()],
   i18n: {
@@ -15,5 +15,8 @@ export default defineConfig({
     shikiConfig: {
       themes: { light: 'github-light', dark: 'github-dark' },
     },
+  },
+  vite: {
+    build: { assetsInlineLimit: 0 },
   },
 });
