@@ -2,6 +2,7 @@
 import Icon from '../ui/Icon.astro';
 import ThemeToggle from './ThemeToggle.astro';
 import LanguageSwitcher from './LanguageSwitcher.astro';
+import Search from '../search/Search.astro';
 import { SITE } from '../../config';
 import { localePath, useTranslations } from '../../i18n';
 import type { Lang } from '../../i18n/languages';
@@ -38,6 +39,7 @@ const mark: Record<string, string> = { en: 'A', bn: 'আ' };
     </nav>
 
     <div class="actions">
+      <Search lang={lang} />
       <LanguageSwitcher lang={lang} alternates={alternates} />
       <ThemeToggle lang={lang} />
       <button
