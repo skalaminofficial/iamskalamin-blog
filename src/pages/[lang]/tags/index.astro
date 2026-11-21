@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHeader from '../../../components/ui/PageHeader.astro';
+import { langCodes, type Lang } from '../../../i18n/languages';
+import { localePath, useTranslations } from '../../../i18n';
+import { formatNumber } from '../../../utils/formatDate';
+import { getTags, tagLabel } from '../../../utils/posts';
+
+export function getStaticPaths() {
+  return langCodes.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Lang;
+const t = useTranslations(lang);
+const tags = await getTags(lang);
+---
+
+<BaseLayout title={t('tags.title')} description={t('blog.description')}>
+  <PageHeader title={t('tags.title')} description={t('blog.description')} />
+  <section class="section">
+    <div class="container">
+      <div class="grid">
+        {tags.map(({ tag, count }) => (
+          <a class="card topic" href={localePath(lang, `tags/${tag}`)}>
+            <strong>{tagLabel(t, tag)}</strong>
+            <span>{t('tags.count', { n: formatNumber(count, lang) })}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+    gap: var(--space-4);
+  }
+  .topic {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: var(--space-5);
+    color: var(--text);
+  }
+  .topic:hover {
+    color: var(--text);
+  }
+  .topic span {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+</style>
