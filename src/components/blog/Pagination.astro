@@ -1,0 +1,48 @@
+---
+import { localePath, useTranslations } from '../../i18n';
+import { formatNumber } from '../../utils/formatDate';
+import type { Lang } from '../../i18n/languages';
+
+interface Props {
+  lang: Lang;
+  current: number;
+  total: number;
+}
+const { lang, current, total } = Astro.props;
+const t = useTranslations(lang);
+const href = (n: number) => (n === 1 ? localePath(lang, 'blog') : localePath(lang, `blog/page/${n}`));
+---
+
+{
+  total > 1 && (
+    <nav class="pagination" aria-label="Pagination">
+      {current > 1 ? (
+        <a class="btn btn--ghost" rel="prev" href={href(current - 1)}>← {t('pagination.previous')}</a>
+      ) : (
+        <span></span>
+      )}
+      <span class="status">
+        {t('pagination.page', { current: formatNumber(current, lang), total: formatNumber(total, lang) })}
+      </span>
+      {current < total ? (
+        <a class="btn btn--ghost" rel="next" href={href(current + 1)}>{t('pagination.next')} →</a>
+      ) : (
+        <span></span>
+      )}
+    </nav>
+  )
+}
+
+<style>
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-top: var(--space-8);
+  }
+  .status {
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+  }
+</style>
