@@ -24,7 +24,7 @@ function resultPage(status, content) {
       'Content-Type': 'text/html; charset=utf-8',
       'Content-Security-Policy': `default-src 'none'; script-src 'nonce-${nonce}'; base-uri 'none'; frame-ancestors 'none'`,
       // ব্যবহার শেষ, state কুকি মুছে ফেলা
-      'Set-Cookie': 'oauth_state=; HttpOnly; Secure; SameSite=Lax; Path=/api/auth; Max-Age=0',
+      'Set-Cookie': 'oauth_state=; HttpOnly; Secure; SameSite=Lax; Path=/api; Max-Age=0',
     },
   });
 }
