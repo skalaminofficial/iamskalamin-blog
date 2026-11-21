@@ -3,3 +3,4 @@ dist/
 node_modules/
 package-lock.json
 public/pagefind/
+public/admin/decap-cms.js
