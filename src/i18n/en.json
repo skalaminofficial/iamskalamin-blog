@@ -57,3 +57,5 @@
   "tags.count": "{n} posts",
   "post.copyLink": "Copy link",
   "post.copied": "Link copied"
+  "search.close": "Close",
+  "search.unavailable": "Search is available on the published site, after a build."
