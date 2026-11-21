@@ -1,0 +1,86 @@
+---
+import { useTranslations } from '../../i18n';
+import type { Lang } from '../../i18n/languages';
+
+interface Props {
+  headings: { depth: number; slug: string; text: string }[];
+  lang: Lang;
+}
+const { headings, lang } = Astro.props;
+const t = useTranslations(lang);
+const items = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+---
+
+{
+  items.length >= 2 && (
+    <nav class="toc" aria-labelledby="toc-title">
+      <p id="toc-title" class="toc-title">{t('post.toc')}</p>
+      <ul>
+        {items.map((h) => (
+          <li class:list={[h.depth === 3 && 'sub']}>
+            <a href={`#${h.slug}`}>{h.text}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
+
+<style>
+  .toc {
+    font-size: var(--text-sm);
+    border-inline-start: 2px solid var(--border);
+    padding-inline-start: var(--space-4);
+  }
+  .toc-title {
+    margin: 0 0 var(--space-3);
+    font-weight: 700;
+    font-size: var(--text-xs);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+  li.sub {
+    padding-inline-start: var(--space-4);
+  }
+  a {
+    color: var(--text-muted);
+    line-height: 1.5;
+    display: block;
+  }
+  a:hover,
+  a[aria-current='true'] {
+    color: var(--accent);
+  }
+</style>
+
+<script>
+  // পড়ার সময় বর্তমান অংশ হাইলাইট
+  const links = document.querySelectorAll<HTMLAnchorElement>('.toc a');
+  if (links.length) {
+    const map = new Map<string, HTMLAnchorElement>();
+    links.forEach((a) => map.set(decodeURIComponent(a.hash.slice(1)), a));
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            links.forEach((a) => a.removeAttribute('aria-current'));
+            map.get(entry.target.id)?.setAttribute('aria-current', 'true');
+          }
+        });
+      },
+      { rootMargin: '-80px 0px -70% 0px' },
+    );
+    map.forEach((_, id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+  }
+</script>
