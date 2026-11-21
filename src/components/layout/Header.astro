@@ -1,0 +1,303 @@
+---
+import Icon from '../ui/Icon.astro';
+import ThemeToggle from './ThemeToggle.astro';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import { SITE } from '../../config';
+import { localePath, useTranslations } from '../../i18n';
+import type { Lang } from '../../i18n/languages';
+
+interface Props {
+  lang: Lang;
+  alternates?: Partial<Record<Lang, string>>;
+}
+const { lang, alternates } = Astro.props;
+const t = useTranslations(lang);
+const path = Astro.url.pathname;
+
+const links = [
+  { key: 'nav.home', href: localePath(lang), exact: true },
+  { key: 'nav.blog', href: localePath(lang, 'blog'), exact: false },
+  { key: 'nav.tags', href: localePath(lang, 'tags'), exact: false },
+  { key: 'nav.about', href: localePath(lang, 'about'), exact: false },
+];
+const isActive = (l: (typeof links)[number]) => (l.exact ? path === l.href : path.startsWith(l.href));
+const mark: Record<string, string> = { en: 'A', bn: 'আ' };
+---
+
+<header class="site-header glass no-print" data-header>
+  <div class="container header-inner">
+    <a class="brand" href={localePath(lang)} aria-label={SITE.name[lang]}>
+      <span class="brand-mark" aria-hidden="true">{mark[lang] ?? 'A'}</span>
+      <span class="brand-name">{SITE.name[lang]}</span>
+    </a>
+
+    <nav class="nav" id="primary-nav" aria-label="Primary">
+      {links.map((l) => (
+        <a href={l.href} aria-current={isActive(l) ? 'page' : undefined}>{t(l.key)}</a>
+      ))}
+    </nav>
+
+    <div class="actions">
+      <LanguageSwitcher lang={lang} alternates={alternates} />
+      <ThemeToggle lang={lang} />
+      <button
+        type="button"
+        class="icon-btn nav-toggle"
+        data-nav-toggle
+        aria-expanded="false"
+        aria-controls="primary-nav"
+        aria-label={t('nav.menu')}
+      >
+        <span class="i-open"><Icon name="menu" /></span>
+        <span class="i-close"><Icon name="close" /></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-bottom: 1px solid var(--border);
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    min-height: var(--header-height);
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: var(--text);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    min-width: 0;
+  }
+  .brand:hover {
+    color: var(--text);
+  }
+  .brand-mark {
+    flex: none;
+    width: 2.2rem;
+    height: 2.2rem;
+    display: grid;
+    place-items: center;
+    border-radius: 11px;
+    font-weight: 800;
+    color: var(--on-accent);
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    box-shadow: var(--shadow-sm);
+  }
+  .brand-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .nav {
+    display: flex;
+    gap: 0.25rem;
+  }
+  .nav a {
+    padding: 0.5rem 0.95rem;
+    border-radius: var(--radius-full);
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+    font-weight: 500;
+  }
+  .nav a:hover {
+    color: var(--text);
+    background: var(--surface-muted);
+  }
+  .nav a[aria-current='page'] {
+    color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: none;
+  }
+  .nav-toggle {
+    display: none;
+  }
+  .i-close {
+    display: none;
+  }
+  .nav-open .i-open {
+    display: none;
+  }
+  .nav-open .i-close {
+    display: inline-flex;
+  }
+
+  @media (max-width: 820px) {
+    .nav-toggle {
+      display: inline-flex;
+    }
+    .nav {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      padding: var(--space-3) var(--space-5) var(--space-4);
+      background: var(--bg-elevated);
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow-md);
+    }
+    .nav-open .nav {
+      display: flex;
+    }
+    .nav a {
+      padding: 0.8rem 1rem;
+      font-size: var(--text-base);
+    }
+    .brand-name {
+      max-width: 10.5rem;
+    }
+  }
+</style>
+
+<style is:global>
+  /* ThemeToggle ও LanguageSwitcher-এর যৌথ মেনু স্টাইল */
+  .menu {
+    position: relative;
+  }
+  .icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    height: 2.5rem;
+    min-width: 2.5rem;
+    padding: 0 0.7rem;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+    cursor: pointer;
+    transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+  }
+  .icon-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .menu-panel {
+    position: absolute;
+    top: calc(100% + 0.6rem);
+    inset-inline-end: 0;
+    min-width: 13rem;
+    padding: 0.5rem;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    z-index: 60;
+  }
+  .menu-panel[hidden] {
+    display: none;
+  }
+  .menu-title {
+    margin: 0;
+    padding: 0.4rem 0.7rem 0.3rem;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+  .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    padding: 0.55rem 0.7rem;
+    border: 0;
+    border-radius: 10px;
+    background: none;
+    color: var(--text);
+    font: inherit;
+    font-size: var(--text-sm);
+    text-align: start;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .menu-item:hover {
+    background: var(--surface-muted);
+    color: var(--text);
+  }
+  .menu-item[aria-pressed='true'],
+  .menu-item[aria-current='true'] {
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .swatches {
+    display: flex;
+    gap: 0.6rem;
+    padding: 0.4rem 0.7rem 0.6rem;
+  }
+  .swatch {
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    background: var(--swatch);
+    cursor: pointer;
+    outline-offset: 3px;
+  }
+  .swatch[aria-pressed='true'] {
+    border-color: var(--text);
+    box-shadow: inset 0 0 0 2px var(--bg-elevated);
+  }
+</style>
+
+<script>
+  // মেনু খোলা/বন্ধ
+  const menus = document.querySelectorAll<HTMLElement>('[data-menu]');
+
+  function closeMenus(except?: HTMLElement) {
+    menus.forEach((menu) => {
+      if (menu === except) return;
+      const panel = menu.querySelector<HTMLElement>('[data-menu-panel]');
+      const button = menu.querySelector<HTMLElement>('[data-menu-button]');
+      if (panel) panel.hidden = true;
+      button?.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  menus.forEach((menu) => {
+    const panel = menu.querySelector<HTMLElement>('[data-menu-panel]');
+    const button = menu.querySelector<HTMLElement>('[data-menu-button]');
+    if (!panel || !button) return;
+    button.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const willOpen = panel.hidden;
+      closeMenus(menu);
+      panel.hidden = !willOpen;
+      button.setAttribute('aria-expanded', String(willOpen));
+    });
+    panel.addEventListener('click', (e) => e.stopPropagation());
+  });
+
+  document.addEventListener('click', () => closeMenus());
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeMenus();
+  });
+
+  // মোবাইল নেভিগেশন
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const toggle = header?.querySelector<HTMLElement>('[data-nav-toggle]');
+  toggle?.addEventListener('click', () => {
+    const open = header!.classList.toggle('nav-open');
+    toggle.setAttribute('aria-expanded', String(open));
+  });
+</script>
