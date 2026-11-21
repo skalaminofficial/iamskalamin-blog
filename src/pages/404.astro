@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { defaultLang } from '../i18n/languages';
+import { localePath, useTranslations } from '../i18n';
+
+const t = useTranslations(defaultLang);
+---
+
+<BaseLayout title={t('notfound.title')} description={t('notfound.text')} noindex>
+  <section class="container container--narrow nf">
+    <p class="code gradient-text">404</p>
+    <h1>{t('notfound.title')}</h1>
+    <p>{t('notfound.text')}</p>
+    <p>
+      <a class="btn btn--primary" href={localePath(defaultLang)}>{t('notfound.home')}</a>
+      <a class="btn btn--ghost" href={localePath('bn')}>বাংলা</a>
+    </p>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf {
+    padding-block: var(--space-12);
+    text-align: center;
+  }
+  .code {
+    font-size: clamp(5rem, 20vw, 9rem);
+    font-weight: 800;
+    line-height: 1;
+    margin: 0;
+  }
+</style>
