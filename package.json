@@ -5,9 +5,12 @@
   "type": "module",
   "engines": { "node": ">=22.22.0" },
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build && pagefind --site dist",
+    "dev": "npm run cms:copy && astro dev",
+    "cms:copy": "node scripts/copy-decap.mjs",
+    "build": "npm run cms:copy && astro build && pagefind --site dist",
     "preview": "astro preview",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "astro": "astro"
   },
   "dependencies": {
@@ -15,6 +18,9 @@
     "astro": "^7.4.0"
   },
   "devDependencies": {
-    "pagefind": "^1.3.0"
+    "decap-cms": "^3.3.3",
+    "pagefind": "^1.3.0",
+    "prettier": "^3.3.0",
+    "prettier-plugin-astro": "^0.14.1"
   }
 }
