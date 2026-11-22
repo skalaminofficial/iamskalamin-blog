@@ -15,7 +15,8 @@ export const SITE = {
   email: '', // ফাঁকা থাকলে ফুটারে দেখাবে না
 
     profile: {
-    image: '', // ছবি আপলোডের পর '/images/profile.jpg' লিখবেন
+    image: '/images/profile.jpg',
+    hero: '/images/profile-hero.jpg',
     alt: {
       en: 'Portrait of Sheikh Al-Amin Ariyan',
       bn: 'শেখ আল আমিন আরিয়ানের ছবি',
