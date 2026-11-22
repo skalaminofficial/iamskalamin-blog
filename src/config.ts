@@ -13,6 +13,15 @@ export const SITE = {
     bn: 'শেখ আল আমিন আরিয়ান',
   },
   email: '', // ফাঁকা থাকলে ফুটারে দেখাবে না
+
+    profile: {
+    image: '', // ছবি আপলোডের পর '/images/profile.jpg' লিখবেন
+    alt: {
+      en: 'Portrait of Sheikh Al-Amin Ariyan',
+      bn: 'শেখ আল আমিন আরিয়ানের ছবি',
+    },
+  },
+  
   // সোশ্যাল লিংক: শুধু url বসান, ফাঁকা থাকলে ফুটারে আসবে না
   socials: {
     github: '',
