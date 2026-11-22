@@ -29,7 +29,7 @@
   "tags.title": "Topics",
   "tags.postsTagged": "Posts tagged \"{tag}\"",
   "tags.count": "{n} posts",
-  "tag.tech": "Technology",
+  "tag.technology": "Technology",
   "tag.travel": "Travel",
   "tag.life": "Lifestyle",
   "tag.tutorial": "Tutorial",
