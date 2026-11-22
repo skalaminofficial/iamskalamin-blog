@@ -126,6 +126,7 @@ const heroPhoto = SITE.profile.hero;
   /* বড় লম্বা পোর্ট্রেট কার্ড: পেছনে সরে থাকা রঙিন ফ্রেম */
   .portrait {
     position: relative;
+    margin-inline-end: 18px;
     isolation: isolate;
     margin: 0;
     width: clamp(15rem, 33vw, 26rem);
@@ -196,6 +197,7 @@ const heroPhoto = SITE.profile.hero;
     /* মোবাইলে ছবি লেখার উপরে, ছোট করে */
     .portrait {
       order: -1;
+      margin-inline-end: 10px;
       width: 10.5rem;
     }
     .portrait::before {
