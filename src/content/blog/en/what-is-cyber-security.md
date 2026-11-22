@@ -3,6 +3,7 @@ title: "What Is Cyber Security? Why It Matters and How to Stay Safe Online"
 description: "Learn what cyber security is, why it matters, the most common online threats, the main areas of the field, and practical steps to protect your accounts and data."
 pubDate: 2026-11-22
 tags: ["cybersecurity", "technology"]
+cover: "/images/what-is-cyber-security-en.jpg"
 draft: false
 ---
 
