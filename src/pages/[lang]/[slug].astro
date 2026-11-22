@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE } from '../../config';
 import { langCodes, type Lang } from '../../i18n/languages';
 import { formatDate } from '../../utils/formatDate';
 import { useTranslations } from '../../i18n';
@@ -26,11 +27,32 @@ const alternates: Partial<Record<Lang, string>> = {};
 for (const code of langCodes) {
   if (pages.some((p) => p.id === `${code}/${slug}`)) alternates[code] = `/${code}/${slug}/`;
 }
+
+// শুধু About পেজে ছবি, আর ছবির পথ দেওয়া থাকলে
+const photo = slug === 'about' ? SITE.profile.image : '';
 ---
 
 <BaseLayout title={title} description={description} alternates={alternates}>
   <div class="container container--narrow page">
-    <h1>{title}</h1>
+    {photo ? (
+      <header class="about-head">
+        <img
+          class="avatar"
+          src={photo}
+          alt={SITE.profile.alt[lang]}
+          width="400"
+          height="400"
+          decoding="async"
+        />
+        <div>
+          <h1>{title}</h1>
+          <p class="role">{t('hero.role')}</p>
+        </div>
+      </header>
+    ) : (
+      <h1>{title}</h1>
+    )}
+
     {updatedDate && (
       <p class="updated">{t('blog.updatedOn', { date: formatDate(updatedDate, lang) })}</p>
     )}
@@ -48,5 +70,40 @@ for (const code of langCodes) {
     color: var(--text-muted);
     font-size: var(--text-sm);
     margin-bottom: var(--space-6);
+  }
+  .about-head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    margin-bottom: var(--space-8);
+  }
+  .about-head h1 {
+    margin-bottom: var(--space-2);
+  }
+  .role {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: var(--text-lg);
+  }
+  .avatar {
+    flex: none;
+    width: 9.5rem;
+    height: 9.5rem;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid var(--bg);
+    box-shadow: 0 0 0 3px var(--accent), var(--shadow-md);
+    background: var(--surface-muted);
+  }
+  @media (max-width: 560px) {
+    .about-head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-4);
+    }
+    .avatar {
+      width: 7.5rem;
+      height: 7.5rem;
+    }
   }
 </style>
