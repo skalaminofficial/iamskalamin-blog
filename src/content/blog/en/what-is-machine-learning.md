@@ -3,7 +3,7 @@ title: "What Is Machine Learning? How It Works and Why It Matters"
 description: "Learn what Machine Learning is, how it works, its main types, real-world applications, advantages, limitations, and its relationship with Artificial Intelligence."
 pubDate: 2026-11-24
 tags: ["artificial-intelligence", "technology"]
-cover: "/images/what-is-machine-learning-en.jpg"
+cover: "/images/what-is-machine-learning.jpg"
 draft: false
 ---
 
