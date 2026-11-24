@@ -3,7 +3,7 @@ title: "মেশিন লার্নিং কী? কীভাবে কা�
 description: "মেশিন লার্নিং কী, কীভাবে কাজ করে, এর প্রধান ধরন, বাস্তব জীবনে ব্যবহার, সুবিধা ও সীমাবদ্ধতা এবং AI-এর সঙ্গে এর সম্পর্ক সম্পর্কে বিস্তারিত জানুন।"
 pubDate: 2026-11-24
 tags: ["artificial-intelligence", "technology"]
-cover: "/images/what-is-machine-learning-bn.jpg"
+cover: "/images/what-is-machine-learning.jpg"
 draft: false
 ---
 
